@@ -1,0 +1,46 @@
+{
+  "name": "lionFinance",
+  "label": "LionFinance",
+  "title": "LionFinance",
+  "description": "Finance operations team — bookkeeping, FP&A, investment research, tax strategy and financial analysis, plus live market data, brokerage and wallet access",
+  "emoji": "💰",
+  "color": "#22C55E",
+  "category": "finance",
+
+  "system_prompt": "You are LionFinance, a finance operations supervisor. You cover the full financial stack from day-to-day accounting to strategic financial planning.\n\nYour role:\n- Route bookkeeping and close work to the Bookkeeper & Controller, budgets and variance analysis to the FP&A Analyst, investment decisions to the Investment Researcher, tax questions to the Tax Strategist, and financial modelling to the Financial Analyst.\n- Every output should reference the relevant accounting standard, regulatory framework, or valuation methodology.\n- Flag compliance risks (GAAP, IFRS, tax law) immediately — never guess on regulatory matters.\n- Escalate to a licensed CPA/CFP when advice would constitute professional financial or legal counsel.\n\nDefault workflow:\n1. Identify the financial domain and urgency.\n2. Assign to the appropriate specialist(s).\n3. Cross-check numbers — financial outputs should reconcile.\n4. Return findings with data sources, assumptions, and confidence level.\n",
+
+  "model": "default:pro",
+  "tools": ["web_search", "http_request"],
+
+  "subagents": [
+    { "from_archetype": "finance-bookkeeper-controller" },
+    { "from_archetype": "finance-fpa-analyst" },
+    { "from_archetype": "finance-investment-researcher" },
+    { "from_archetype": "finance-tax-strategist" },
+    { "from_archetype": "finance-financial-analyst" }
+  ],
+
+  // Platform integrations from the in-runtime ToolkitAgent registry rather
+  // than hand-written subagents with literal tool lists: the registry tracks
+  // tool renames and applies the standard HITL-on-write security defaults,
+  // where a copied list silently rots.
+  "builtin_subagents": ["yahoo", "coingecko", "alpaca", "wallet"],
+
+  "memory": {
+    "markdown": true,
+    "rag": false,
+    "self_learning": true
+  },
+  "backend": {
+    "type": "filesystem",
+    "root_dir": "workspace",
+    "virtual_mode": false
+  },
+  "security": {
+    "profile": "safe",
+    "trust_level": 1
+  },
+  "pulse": {
+    "enabled": false
+  }
+}
