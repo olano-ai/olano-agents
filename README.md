@@ -1,99 +1,84 @@
 # Olano Agents
 
-**Olano Agents** is Olano's fork of [The Agency](https://github.com/msitarzewski/agency-agents)
-by Michael Sitarzewski and contributors, released under the MIT license. It adds the
-archetype files (`*.json5` next to each persona, and the team archetypes in `teams/`)
-that the [Olano](https://github.com/olano-ai/olano) runtime installs as agent templates,
-plus a few new and revised personas. The persona markdown files work as they do upstream
-in Claude Code and the other supported tools; the `.json5` archetypes need the Olano
-runtime (they name Olano model tiers such as `default:turbo` and Olano tools).
+**Start with an agent that already has a job.**
 
-What Olano changed relative to upstream (commit `783f6a7`):
+Ready-to-use agent and team templates for
+[Olano](https://github.com/olano-ai/olano). Pick a role, connect the tools it needs,
+and give it a task. Start with one specialist for research, coding or design,
+or a team that brings several specialists together.
 
-- **Added:** every `*.json5` archetype and `teams/`, `scripts/build-archetypes.py`,
-  `scripts/lint-archetypes.sh`, and four personas:
-  `design/design-social-asset-composer.md`,
-  `marketing/marketing-brand-positioning-strategist.md`,
-  `marketing/marketing-facebook-page-strategist.md` and
-  `marketing/marketing-social-publisher.md`.
-- **Rewritten:** `marketing/marketing-carousel-growth-engine.md`.
-- **Edited:** this README (catalog rows and this header), `CONTRIBUTING.md` and the
-  lint workflow (archetype checks).
+This repository is Olano's fork of
+[The Agency](https://github.com/msitarzewski/agency-agents) by Michael Sitarzewski
+and contributors. Olano adds installable agent configurations, team templates
+and additional personas. The project is MIT licensed; upstream credit and
+license notices are preserved.
 
-The five added or rewritten personas tell the model to call Olano tools by name, so they
-are meant for the Olano runtime. Every other persona is upstream's, unchanged: please send
-improvements to those to [the upstream project](https://github.com/msitarzewski/agency-agents).
+[Use with Olano](#quick-start-with-olano) · [Pick an agent](#pick-an-agent) ·
+[Pick a team](#pick-a-team) · [Other tools](#use-with-other-tools) ·
+[Contribute](#contributing)
 
----
+## Quick start with Olano
 
-## About The Agency
+[Install Olano](https://github.com/olano-ai/olano#quick-start) and connect a model
+provider first. In the dashboard, open **Agents** and create an agent from a
+template. Choose its model and tools, connect any accounts it needs, then open
+Chat and give it a task.
 
-> **A complete AI agency at your fingertips** - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.
+### Install from the command line
 
-## 🚀 What Is This?
-
-Born from a Reddit thread and months of iteration, **The Agency** is a growing collection of meticulously crafted AI agent personalities. Each agent is:
-
-- **🎯 Specialized**: Deep expertise in their domain (not generic prompt templates)
-- **🧠 Personality-Driven**: Unique voice, communication style, and approach
-- **📋 Deliverable-Focused**: Real code, processes, and measurable outcomes
-- **✅ Production-Ready**: Battle-tested workflows and success metrics
-
-**Think of it as**: Assembling your dream team, except they're AI specialists who never sleep, never complain, and always deliver.
-
----
-
-## ⚡ Quick Start
-
-### Option 1: Use with Claude Code (Recommended)
+With the Olano CLI available, fetch this repository and install a specialist:
 
 ```bash
-# Install all agents to your Claude Code directory
-./scripts/install.sh --tool claude-code
-
-# Or manually copy a category if you only want one division
-cp engineering/*.md ~/.claude/agents/
-
-# Then activate any agent in your Claude Code sessions:
-# "Hey Claude, activate Frontend Developer mode and help me build a React component"
+olano archetypes update --url https://github.com/olano-ai/olano-agents.git
+olano archetypes list
+olano archetypes install engineering-frontend-developer --as-name frontend
 ```
 
-### Option 2: Use as Reference
+For a source checkout, prefix commands with `uv run`. For Docker, run the CLI
+inside the runtime container, for example
+`docker compose exec olano olano archetypes list` from your compose directory.
 
-Each agent file contains:
-- Identity & personality traits
-- Core mission & workflows
-- Technical deliverables with code examples
-- Success metrics & communication style
+Open the installed agent in your Olano dashboard, configure its model and tools,
+and try a specific request:
 
-Browse the agents below and copy/adapt the ones you need!
+> Build a responsive landing page for a local coffee shop. Include a menu, opening hours and a contact section.
 
-### Option 3: Use with Other Tools (GitHub Copilot, Antigravity, Gemini CLI, OpenCode, OpenClaw, Cursor, Aider, Windsurf, Kimi Code)
+To install a team instead:
 
 ```bash
-# Step 1 -- generate integration files for all supported tools
-./scripts/convert.sh
-
-# Step 2 -- install interactively (auto-detects what you have installed)
-./scripts/install.sh
-
-# Or target a specific tool directly
-./scripts/install.sh --tool antigravity
-./scripts/install.sh --tool gemini-cli
-./scripts/install.sh --tool opencode
-./scripts/install.sh --tool copilot
-./scripts/install.sh --tool openclaw
-./scripts/install.sh --tool cursor
-./scripts/install.sh --tool aider
-./scripts/install.sh --tool windsurf
-./scripts/install.sh --tool kimi
+olano archetypes install lionSocial --as-name social
 ```
 
-See the [Multi-Tool Integrations](#-multi-tool-integrations) section below for full details.
+A first task for this team could be:
 
----
+> Draft LinkedIn, X and Facebook posts for our launch. Ask me for the product details and brand kit first, then prepare the drafts for review.
 
-## 🎨 The Agency Roster
+`olano archetypes update` without `--url` uses Olano's public catalog first;
+the explicit URL above fetches this repository directly. Templates that use
+`default:turbo` or `default:pro` resolve through your deployment's model settings.
+You can also pass `--model provider:model` at installation or choose a model in
+the dashboard. A paid Olano Cloud subscription is not required to self-host.
+
+## Pick an agent
+
+| Task | Template |
+| --- | --- |
+| Build or improve a web interface | [Frontend Developer](engineering/engineering-frontend-developer.md) |
+| Explain an unfamiliar codebase | [Codebase Onboarding Engineer](engineering/engineering-codebase-onboarding-engineer.md) |
+| Review a code change | [Code Reviewer](engineering/engineering-code-reviewer.md) |
+| Clarify a product's positioning and voice | [Brand Positioning Strategist](marketing/marketing-brand-positioning-strategist.md) |
+| Create branded social graphics | [Social Asset Composer](design/design-social-asset-composer.md) |
+| Write developer documentation | [Technical Writer](engineering/engineering-technical-writer.md) |
+
+Browse by area: [engineering](engineering), [design](design),
+[marketing](marketing), [paid media](paid-media), [sales](sales),
+[product](product), [project management](project-management), [testing](testing),
+[support](support), [finance](finance), [game development](game-development),
+[spatial computing](spatial-computing), [academic](academic),
+[specialized roles](specialized) and [strategy workflows](strategy).
+
+<details>
+<summary>Browse the full specialist roster</summary>
 
 ### 💻 Engineering Division
 
@@ -407,540 +392,112 @@ Scholarly rigor for world-building, storytelling, and narrative design.
 
 ---
 
-## 🎯 Real-World Use Cases
-
-### Scenario 1: Building a Startup MVP
-
-**Your Team**:
-1. 🎨 **Frontend Developer** - Build the React app
-2. 🏗️ **Backend Architect** - Design the API and database
-3. 🚀 **Growth Hacker** - Plan user acquisition
-4. ⚡ **Rapid Prototyper** - Fast iteration cycles
-5. 🔍 **Reality Checker** - Ensure quality before launch
-
-**Result**: Ship faster with specialized expertise at every stage.
-
----
-
-### Scenario 2: Marketing Campaign Launch
-
-**Your Team**:
-1. 📝 **Content Creator** - Develop campaign content
-2. 🐦 **Twitter Engager** - Twitter strategy and execution
-3. 📸 **Instagram Curator** - Visual content and stories
-4. 🤝 **Reddit Community Builder** - Authentic community engagement
-5. 📊 **Analytics Reporter** - Track and optimize performance
-
-**Result**: Multi-channel coordinated campaign with platform-specific expertise.
-
----
-
-### Scenario 3: Enterprise Feature Development
-
-**Your Team**:
-1. 👔 **Senior Project Manager** - Scope and task planning
-2. 💎 **Senior Developer** - Complex implementation
-3. 🎨 **UI Designer** - Design system and components
-4. 🧪 **Experiment Tracker** - A/B test planning
-5. 📸 **Evidence Collector** - Quality verification
-6. 🔍 **Reality Checker** - Production readiness
-
-**Result**: Enterprise-grade delivery with quality gates and documentation.
-
----
-
-### Scenario 4: Paid Media Account Takeover
-
-**Your Team**:
-
-1. 📋 **Paid Media Auditor** - Comprehensive account assessment
-2. 📡 **Tracking & Measurement Specialist** - Verify conversion tracking accuracy
-3. 💰 **PPC Campaign Strategist** - Redesign account architecture
-4. 🔍 **Search Query Analyst** - Clean up wasted spend from search terms
-5. ✍️ **Ad Creative Strategist** - Refresh all ad copy and extensions
-6. 📊 **Analytics Reporter** (Support Division) - Build reporting dashboards
-
-**Result**: Systematic account takeover with tracking verified, waste eliminated, structure optimized, and creative refreshed — all within the first 30 days.
-
----
-
-### Scenario 5: Full Agency Product Discovery
-
-**Your Team**: All 8 divisions working in parallel on a single mission.
-
-See the **[Nexus Spatial Discovery Exercise](examples/nexus-spatial-discovery.md)** -- a complete example where 8 agents (Product Trend Researcher, Backend Architect, Brand Guardian, Growth Hacker, Support Responder, UX Researcher, Project Shepherd, and XR Interface Architect) were deployed simultaneously to evaluate a software opportunity and produce a unified product plan covering market validation, technical architecture, brand strategy, go-to-market, support systems, UX research, project execution, and spatial UI design.
-
-**Result**: Comprehensive, cross-functional product blueprint produced in a single session. [More examples](examples/).
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-### Add a New Agent
-
-1. Fork the repository
-2. Create a new agent file in the appropriate category
-3. Follow the agent template structure:
-   - Frontmatter with name, description, color (and an optional `title` — the
-     position an installed agent holds — when it differs from the name)
-   - Identity & Memory section
-   - Core Mission
-   - Critical Rules (domain-specific)
-   - Technical Deliverables with examples
-   - Workflow Process
-   - Success Metrics
-4. Submit a PR with your agent
-
-### Improve Existing Agents
-
-- Add real-world examples
-- Enhance code samples
-- Update success metrics
-- Improve workflows
-
-### Share Your Success Stories
-
-Have you used these agents successfully? Share your story in the [Discussions](https://github.com/olano-ai/olano-agents/discussions)!
-
----
-
-## 📖 Agent Design Philosophy
-
-Each agent is designed with:
-
-1. **🎭 Strong Personality**: Not generic templates - real character and voice
-2. **📋 Clear Deliverables**: Concrete outputs, not vague guidance
-3. **✅ Success Metrics**: Measurable outcomes and quality standards
-4. **🔄 Proven Workflows**: Step-by-step processes that work
-5. **💡 Learning Memory**: Pattern recognition and continuous improvement
-
----
-
-## 🎁 What Makes This Special?
-
-### Unlike Generic AI Prompts:
-- ❌ Generic "Act as a developer" prompts
-- ✅ Deep specialization with personality and process
-
-### Unlike Prompt Libraries:
-- ❌ One-off prompt collections
-- ✅ Comprehensive agent systems with workflows and deliverables
-
-### Unlike AI Tools:
-- ❌ Black box tools you can't customize
-- ✅ Transparent, forkable, adaptable agent personalities
-
----
-
-## 🎨 Agent Personality Highlights
-
-> "I don't just test your code - I default to finding 3-5 issues and require visual proof for everything."
->
-> -- **Evidence Collector** (Testing Division)
-
-> "You're not marketing on Reddit - you're becoming a valued community member who happens to represent a brand."
->
-> -- **Reddit Community Builder** (Marketing Division)
-
-> "Every playful element must serve a functional or emotional purpose. Design delight that enhances rather than distracts."
->
-> -- **Whimsy Injector** (Design Division)
-
-> "Let me add a celebration animation that reduces task completion anxiety by 40%"
->
-> -- **Whimsy Injector** (during a UX review)
-
----
-
-## 📊 Stats
-
-- 🎭 **144 Specialized Agents** across 12 divisions
-- 📝 **10,000+ lines** of personality, process, and code examples
-- ⏱️ **Months of iteration** from real-world usage
-- 🌟 **Battle-tested** in production environments
-- 💬 **50+ requests** in first 12 hours on Reddit
-
----
-
-## 🔌 Multi-Tool Integrations
-
-The Agency works natively with Claude Code, and ships conversion + install scripts so you can use the same agents across every major agentic coding tool.
-
-### Supported Tools
-
-- **[Claude Code](https://claude.ai/code)** — native `.md` agents, no conversion needed → `~/.claude/agents/`
-- **[GitHub Copilot](https://github.com/copilot)** — native `.md` agents, no conversion needed → `~/.github/agents/` + `~/.copilot/agents/`
-- **[Antigravity](https://github.com/google-gemini/antigravity)** — `SKILL.md` per agent → `~/.gemini/antigravity/skills/`
-- **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — extension + `SKILL.md` files → `~/.gemini/extensions/agency-agents/`
-- **[OpenCode](https://opencode.ai)** — `.md` agent files → `.opencode/agents/`
-- **[Cursor](https://cursor.sh)** — `.mdc` rule files → `.cursor/rules/`
-- **[Aider](https://aider.chat)** — single `CONVENTIONS.md` → `./CONVENTIONS.md`
-- **[Windsurf](https://codeium.com/windsurf)** — single `.windsurfrules` → `./.windsurfrules`
-- **[OpenClaw](https://github.com/openclaw/openclaw)** — `SOUL.md` + `AGENTS.md` + `IDENTITY.md` per agent
-- **[Qwen Code](https://github.com/QwenLM/qwen-code)** — `.md` SubAgent files → `~/.qwen/agents/`
-- **[Kimi Code](https://github.com/MoonshotAI/kimi-cli)** — YAML agent specs → `~/.config/kimi/agents/`
-
----
-
-### ⚡ Quick Install
-
-**Step 1 -- Generate integration files:**
-```bash
-./scripts/convert.sh
-# Faster (parallel, output order may vary): ./scripts/convert.sh --parallel
-```
-
-**Step 2 -- Install (interactive, auto-detects your tools):**
-```bash
-./scripts/install.sh
-# Faster (parallel, output order may vary): ./scripts/install.sh --no-interactive --parallel
-```
-
-The installer scans your system for installed tools, shows a checkbox UI, and lets you pick exactly what to install:
-
-```
-  +------------------------------------------------+
-  |   The Agency -- Tool Installer                 |
-  +------------------------------------------------+
-
-  System scan: [*] = detected on this machine
-
-  [x]  1)  [*]  Claude Code     (claude.ai/code)
-  [x]  2)  [*]  Copilot         (~/.github + ~/.copilot)
-  [x]  3)  [*]  Antigravity     (~/.gemini/antigravity)
-  [ ]  4)  [ ]  Gemini CLI      (gemini extension)
-  [ ]  5)  [ ]  OpenCode        (opencode.ai)
-  [ ]  6)  [ ]  OpenClaw        (~/.openclaw/agency-agents)
-  [x]  7)  [*]  Cursor          (.cursor/rules)
-  [ ]  8)  [ ]  Aider           (CONVENTIONS.md)
-  [ ]  9)  [ ]  Windsurf        (.windsurfrules)
-  [ ] 10)  [ ]  Qwen Code       (~/.qwen/agents)
-  [ ] 11)  [ ]  Kimi Code       (~/.config/kimi/agents)
-
-  [1-11] toggle   [a] all   [n] none   [d] detected
-  [Enter] install   [q] quit
-```
-
-**Or install a specific tool directly:**
-```bash
-./scripts/install.sh --tool cursor
-./scripts/install.sh --tool opencode
-./scripts/install.sh --tool openclaw
-./scripts/install.sh --tool antigravity
-```
-
-**Non-interactive (CI/scripts):**
-```bash
-./scripts/install.sh --no-interactive --tool all
-```
-
-**Faster runs (parallel)** — On multi-core machines, use `--parallel` so each tool is processed in parallel. Output order across tools is non-deterministic. Works with both interactive and non-interactive install: e.g. `./scripts/install.sh --interactive --parallel` (pick tools, then install in parallel) or `./scripts/install.sh --no-interactive --parallel`. Job count defaults to `nproc` (Linux), `sysctl -n hw.ncpu` (macOS), or 4; override with `--jobs N`.
+</details>
+
+## Pick a team
+
+A team template gives a supervisor agent a set of specialist subagents and,
+where configured, tool integrations. The supervisor can delegate parts of your
+task and bring the results together.
+
+| Team | Useful for |
+| --- | --- |
+| [LionDev](teams/lionDev.json5) | Software development, code review, infrastructure and technical writing. |
+| [LionSocial](teams/lionSocial.json5) | Brand foundations, social posts, graphics and publishing after approval. |
+| [LionMarketing](teams/lionMarketing.json5) | Coordinating marketing specialists around a campaign. |
+| [LionDesign](teams/lionDesign.json5) | Coordinating design work across specialists. |
+| [LionProduct](teams/lionProduct.json5) | Product research, planning and prioritization. |
+| [LionQA](teams/lionQA.json5) | API testing, accessibility, performance and quality review. |
+
+[Browse all team configurations](teams). Connect the services a team needs and
+review its tools before starting work. Installing a template does not connect
+external accounts or grant access to them.
+
+## What is in a template?
+
+| File | Purpose |
+| --- | --- |
+| `<category>/<agent>.md` | The persona: role, instructions, workflow and expected outputs. |
+| `<category>/<agent>.json5` | The Olano configuration: prompt, model defaults, tools and agent settings. |
+| `teams/<team>.json5` | A supervisor configuration with specialist references and team integrations. |
+
+The instructions are a starting point. Olano supplies execution, model access,
+tools, workspaces, memory and scheduling. Customize the installed agent's
+instructions and settings for your own project.
+
+## Use with other tools
+
+Many Markdown personas can also be used with other agent tools. The `.json5`
+configurations are specifically for Olano. Personas that name Olano tools,
+including its social publishing and asset creation tools, need those integrations
+or adaptation for a different host.
+
+For Claude Code, clone the repository and run the installer:
 
 ```bash
-./scripts/convert.sh --parallel                    # convert all tools in parallel
-./scripts/convert.sh --parallel --jobs 8           # cap parallel jobs
-./scripts/install.sh --no-interactive --parallel   # install all detected tools in parallel
-./scripts/install.sh --interactive --parallel      # pick tools, then install in parallel
-./scripts/install.sh --no-interactive --parallel --jobs 4
-```
-
----
-
-### Tool-Specific Instructions
-
-<details>
-<summary><strong>Claude Code</strong></summary>
-
-Agents are copied directly from the repo into `~/.claude/agents/` -- no conversion needed.
-
-```bash
+git clone https://github.com/olano-ai/olano-agents.git
+cd olano-agents
 ./scripts/install.sh --tool claude-code
 ```
 
-Then activate in Claude Code:
-```
-Use the Frontend Developer agent to review this component.
-```
-
-See [integrations/claude-code/README.md](integrations/claude-code/README.md) for details.
-</details>
-
-<details>
-<summary><strong>GitHub Copilot</strong></summary>
-
-Agents are copied directly from the repo into `~/.github/agents/` and `~/.copilot/agents/` -- no conversion needed.
-
-```bash
-./scripts/install.sh --tool copilot
-```
-
-Then activate in GitHub Copilot:
-```
-Use the Frontend Developer agent to review this component.
-```
-
-See [integrations/github-copilot/README.md](integrations/github-copilot/README.md) for details.
-</details>
-
-<details>
-<summary><strong>Antigravity (Gemini)</strong></summary>
-
-Each agent becomes a skill in `~/.gemini/antigravity/skills/agency-<slug>/`.
-
-```bash
-./scripts/install.sh --tool antigravity
-```
-
-Activate in Gemini with Antigravity:
-```
-@agency-frontend-developer review this React component
-```
-
-See [integrations/antigravity/README.md](integrations/antigravity/README.md) for details.
-</details>
-
-<details>
-<summary><strong>Gemini CLI</strong></summary>
-
-Installs as a Gemini CLI extension with one skill per agent plus a manifest.
-On a fresh clone, generate the Gemini extension files before running the installer.
-
-```bash
-./scripts/convert.sh --tool gemini-cli
-./scripts/install.sh --tool gemini-cli
-```
-
-See [integrations/gemini-cli/README.md](integrations/gemini-cli/README.md) for details.
-</details>
-
-<details>
-<summary><strong>OpenCode</strong></summary>
-
-Agents are placed in `.opencode/agents/` in your project root (project-scoped).
-
-```bash
-cd /your/project
-/path/to/agency-agents/scripts/install.sh --tool opencode
-```
-
-Or install globally:
-```bash
-mkdir -p ~/.config/opencode/agents
-cp integrations/opencode/agents/*.md ~/.config/opencode/agents/
-```
-
-Activate in OpenCode:
-```
-@backend-architect design this API.
-```
-
-See [integrations/opencode/README.md](integrations/opencode/README.md) for details.
-</details>
-
-<details>
-<summary><strong>Cursor</strong></summary>
-
-Each agent becomes a `.mdc` rule file in `.cursor/rules/` of your project.
-
-```bash
-cd /your/project
-/path/to/agency-agents/scripts/install.sh --tool cursor
-```
-
-Rules are auto-applied when Cursor detects them in the project. Reference them explicitly:
-```
-Use the @security-engineer rules to review this code.
-```
-
-See [integrations/cursor/README.md](integrations/cursor/README.md) for details.
-</details>
-
-<details>
-<summary><strong>Aider</strong></summary>
-
-All agents are compiled into a single `CONVENTIONS.md` file that Aider reads automatically.
-
-```bash
-cd /your/project
-/path/to/agency-agents/scripts/install.sh --tool aider
-```
-
-Then reference agents in your Aider session:
-```
-Use the Frontend Developer agent to refactor this component.
-```
-
-See [integrations/aider/README.md](integrations/aider/README.md) for details.
-</details>
-
-<details>
-<summary><strong>Windsurf</strong></summary>
-
-All agents are compiled into `.windsurfrules` in your project root.
-
-```bash
-cd /your/project
-/path/to/agency-agents/scripts/install.sh --tool windsurf
-```
-
-Reference agents in Windsurf's Cascade:
-```
-Use the Reality Checker agent to verify this is production ready.
-```
-
-See [integrations/windsurf/README.md](integrations/windsurf/README.md) for details.
-</details>
-
-<details>
-<summary><strong>OpenClaw</strong></summary>
-
-Each agent becomes a workspace with `SOUL.md`, `AGENTS.md`, and `IDENTITY.md` in `~/.openclaw/agency-agents/`.
-
-```bash
-./scripts/convert.sh --tool openclaw
-./scripts/install.sh --tool openclaw
-```
-
-If the `openclaw` CLI is available, the installer registers each workspace automatically.
-Run `openclaw gateway restart` after installation so the new agents are activated.
-
-See [integrations/openclaw/README.md](integrations/openclaw/README.md) for details.
-
-</details>
-
-<details>
-<summary><strong>Qwen Code</strong></summary>
-
-SubAgents are installed to `.qwen/agents/` in your project root (project-scoped).
-
-```bash
-# Convert and install (run from your project root)
-cd /your/project
-./scripts/convert.sh --tool qwen
-./scripts/install.sh --tool qwen
-```
-
-**Usage in Qwen Code:**
-- Reference by name: `Use the frontend-developer agent to review this component`
-- Or let Qwen auto-delegate based on task context
-- Manage via `/agents` command in interactive mode
-
-> 📚 [Qwen SubAgents Docs](https://qwenlm.github.io/qwen-code-docs/en/users/features/sub-agents/)
-
-</details>
-
-<details>
-<summary><strong>Kimi Code</strong></summary>
-
-Agents are converted to Kimi Code CLI format (YAML + system prompt) and installed to `~/.config/kimi/agents/`.
-
-```bash
-# Convert and install
-./scripts/convert.sh --tool kimi
-./scripts/install.sh --tool kimi
-```
-
-**Usage with Kimi Code:**
-```bash
-# Use an agent
-kimi --agent-file ~/.config/kimi/agents/frontend-developer/agent.yaml
-
-# In a project
-kimi --agent-file ~/.config/kimi/agents/frontend-developer/agent.yaml \
-     --work-dir /your/project \
-     "Review this React component"
-```
-
-See [integrations/kimi/README.md](integrations/kimi/README.md) for details.
-
-</details>
-
----
-
-### Regenerating After Changes
-
-When you add new agents or edit existing ones, regenerate all integration files:
-
-```bash
-./scripts/convert.sh                    # regenerate all (serial)
-./scripts/convert.sh --parallel         # regenerate all in parallel (faster)
-./scripts/convert.sh --tool cursor      # regenerate just one tool
-```
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Interactive agent selector web tool
-- [x] Multi-agent workflow examples -- see [examples/](examples/)
-- [x] Multi-tool integration scripts (Claude Code, GitHub Copilot, Antigravity, Gemini CLI, OpenCode, OpenClaw, Cursor, Aider, Windsurf, Qwen Code, Kimi Code)
-- [ ] Video tutorials on agent design
-- [ ] Community agent marketplace
-- [ ] Agent "personality quiz" for project matching
-- [ ] "Agent of the Week" showcase series
-
----
-
-## 🌐 Community Translations & Localizations
-
-Community-maintained translations and regional adaptations. These are independently maintained -- see each repo for coverage and version compatibility.
-
-| Language | Maintainer | Link | Notes |
-|----------|-----------|------|-------|
-| 🇨🇳 简体中文 (zh-CN) | [@jnMetaCode](https://github.com/jnMetaCode) | [agency-agents-zh](https://github.com/jnMetaCode/agency-agents-zh) | 141 translated agents + 46 China-market originals |
-| 🇨🇳 简体中文 (zh-CN) | [@dsclca12](https://github.com/dsclca12) | [agent-teams](https://github.com/dsclca12/agent-teams) | Independent translation with Bilibili, WeChat, Xiaohongshu localization |
-
-Want to add a translation? Open an issue and we'll link it here.
-
----
-
-## 🔗 Related Resources
-
-- [awesome-openclaw-agents](https://github.com/mergisi/awesome-openclaw-agents) — Community-maintained OpenClaw agent collection (derived from this repo)
-
----
-
-## 📜 License
-
-MIT License - Use freely, commercially or personally. Attribution appreciated but not required.
-
----
-
-## 🙏 Acknowledgments
-
-What started as a Reddit thread about AI agent specialization has grown into something remarkable — **147 agents across 12 divisions**, supported by a community of contributors from around the world. Every agent in this repo exists because someone cared enough to write it, test it, and share it.
-
-To everyone who has opened a PR, filed an issue, started a Discussion, or simply tried an agent and told us what worked — thank you. You're the reason The Agency keeps getting better.
-
----
-
-## 💬 Community
-
-- **GitHub Discussions**: [Share your success stories](https://github.com/olano-ai/olano-agents/discussions)
-- **Issues**: [Report bugs or request features](https://github.com/olano-ai/olano-agents/issues)
-- **Reddit**: Join the conversation on r/ClaudeAI
-- **Twitter/X**: Share with #TheAgency
-
----
-
-## 🚀 Get Started
-
-1. **Browse** the agents above and find specialists for your needs
-2. **Copy** the agents to `~/.claude/agents/` for Claude Code integration
-3. **Activate** agents by referencing them in your Claude conversations
-4. **Customize** agent personalities and workflows for your specific needs
-5. **Share** your results and contribute back to the community
-
----
-
-<div align="center">
-
-**🎭 The Agency: Your AI Dream Team Awaits 🎭**
-
-[⭐ Star this repo](https://github.com/olano-ai/olano-agents) • [🍴 Fork it](https://github.com/olano-ai/olano-agents/fork) • [🐛 Report an issue](https://github.com/olano-ai/olano-agents/issues) • [❤️ Sponsor](https://github.com/sponsors/msitarzewski)
-
-Made with ❤️ by the community, for the community
-
-</div>
+This installs the personas in your Claude Code agents directory. Then ask Claude
+to use a role, for example: "Use Frontend Developer to help build this page."
+
+Other hosts have their own conversion and installation steps:
+
+| Host | Instructions |
+| --- | --- |
+| Claude Code | [Setup guide](integrations/claude-code/README.md) |
+| GitHub Copilot | [Setup guide](integrations/github-copilot/README.md) |
+| Antigravity | [Setup guide](integrations/antigravity/README.md) |
+| Gemini CLI | [Setup guide](integrations/gemini-cli/README.md) |
+| OpenCode | [Setup guide](integrations/opencode/README.md) |
+| OpenClaw | [Setup guide](integrations/openclaw/README.md) |
+| Cursor | [Setup guide](integrations/cursor/README.md) |
+| Aider | [Setup guide](integrations/aider/README.md) |
+| Windsurf | [Setup guide](integrations/windsurf/README.md) |
+| Kimi Code | [Setup guide](integrations/kimi/README.md) |
+| Qwen Code | [Setup guide](integrations/qwen/README.md) |
+
+See the [integration overview](integrations/README.md) for generated formats and
+installation locations. For project-scoped hosts, run the installer from the
+target project as described in the relevant guide.
+
+## Contributing
+
+Useful contributions include clearer instructions, new specialist roles, better
+team configurations and fixes backed by a real task. Read
+[CONTRIBUTING.md](CONTRIBUTING.md) for the format and checks.
+
+For Olano-specific changes, open an issue or pull request here. For improvements
+to personas inherited from The Agency, consider contributing them
+[upstream](https://github.com/msitarzewski/agency-agents) as well.
+
+Olano configuration files can be generated with
+[scripts/build-archetypes.py](scripts/build-archetypes.py) and validated with
+[scripts/lint-archetypes.sh](scripts/lint-archetypes.sh). Follow the contribution
+guide when changing personas or regenerating integration files.
+
+## How the Olano repositories fit together
+
+| Repository | Purpose |
+| --- | --- |
+| [olano](https://github.com/olano-ai/olano) | The platform that runs agents, connects tools and provides the dashboard. |
+| [skills](https://github.com/olano-ai/skills) | Reusable instructions for carrying out particular tasks. |
+| **olano-agents (this repository)** | Starting roles and teams to install and customize. |
+
+See [Olano demos](https://www.youtube.com/channel/UCNkV0LVC6E_ZbtVkEnogdJA)
+for examples of agents at work.
+
+## Attribution and license
+
+Olano Agents is based on [The Agency](https://github.com/msitarzewski/agency-agents)
+by **Michael Sitarzewski and contributors**, using upstream commit `783f6a7` as
+the original fork baseline. Olano adds the `.json5` archetypes, `teams/`,
+archetype build and validation scripts, and new or adapted personas, including
+its brand positioning, Facebook strategy, social publishing, social asset
+composition and carousel workflows.
+
+Released under the [MIT License](LICENSE), with copyright notices for AgentLand
+Contributors and Olano. Keep the license and copyright notices when copying or
+redistributing this work.
